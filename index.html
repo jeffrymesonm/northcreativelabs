@@ -5,11 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>North Creative Labs | Soluciones Digitales Premium</title>
     <meta name="description" content="Diseño moderno y soluciones funcionales para freelancers y negocios locales. Premium, accesible y orientado a resultados.">
+    <meta name="theme-color" content="#050505">
+    <!-- REEMPLAZA https://northcreativelabs.com/ por tu dominio real -->
+    <link rel="canonical" href="https://northcreativelabs.com/">
+
+    <!-- Open Graph (preview en WhatsApp, Facebook, LinkedIn) -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:site_name" content="North Creative Labs">
+    <meta property="og:title" content="North Creative Labs | Soluciones Digitales Premium">
+    <meta property="og:description" content="Diseño web que convierte visitas en clientes reales. Para freelancers y negocios locales. Premium, accesible y rápido.">
+    <meta property="og:url" content="https://northcreativelabs.com/">
+    <!-- Ideal: una imagen 1200x630 en assets/og-image.png. De momento usa el logo. -->
+    <meta property="og:image" content="https://northcreativelabs.com/assets/logo.png">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="North Creative Labs | Soluciones Digitales Premium">
+    <meta name="twitter:description" content="Diseño web que convierte visitas en clientes reales. Para freelancers y negocios locales.">
+    <meta name="twitter:image" content="https://northcreativelabs.com/assets/logo.png">
+
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="apple-touch-icon" href="assets/favicon.png">
-    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Datos estructurados para Google (negocio de servicios) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "North Creative Labs",
+        "description": "Diseño web y soluciones digitales para freelancers y negocios locales.",
+        "url": "https://northcreativelabs.com/",
+        "image": "https://northcreativelabs.com/assets/logo.png",
+        "priceRange": "$100 - $800+ USD",
+        "areaServed": "Worldwide",
+        "serviceType": ["Diseño web", "Landing pages", "E-commerce", "SEO", "Mantenimiento web"]
+    }
+    </script>
 </head>
 <body>
     <div class="grain-overlay"></div>
@@ -24,8 +61,10 @@
             <nav class="desktop-nav">
                 <a href="#services" data-i18n="nav_services">Servicios</a>
                 <a href="#portfolio" data-i18n="nav_portfolio">Portafolio</a>
+                <a href="#testimonials" data-i18n="nav_testimonials">Testimonios</a>
                 <a href="#about" data-i18n="nav_about">Nosotros</a>
                 <a href="#pricing" data-i18n="nav_pricing">Precios</a>
+                <a href="#faq" data-i18n="nav_faq">FAQ</a>
             </nav>
             <div class="nav-actions">
                 <!-- Selector de idioma -->
@@ -35,8 +74,23 @@
                     <button type="button" class="lang-btn" data-lang="de">DE</button>
                 </div>
                 <a href="#hero-form" class="btn btn-outline btn-sm nav-cta" data-i18n="nav_cta">Cotizar Proyecto</a>
+                <!-- Botón de menú móvil -->
+                <button type="button" class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+                    <i data-lucide="menu"></i>
+                </button>
             </div>
         </div>
+
+        <!-- Menú móvil desplegable -->
+        <nav class="mobile-menu" id="mobileMenu" aria-label="Menú principal">
+            <a href="#services" data-i18n="nav_services">Servicios</a>
+            <a href="#portfolio" data-i18n="nav_portfolio">Portafolio</a>
+            <a href="#testimonials" data-i18n="nav_testimonials">Testimonios</a>
+            <a href="#about" data-i18n="nav_about">Nosotros</a>
+            <a href="#pricing" data-i18n="nav_pricing">Precios</a>
+            <a href="#faq" data-i18n="nav_faq">FAQ</a>
+            <a href="#hero-form" class="btn btn-primary btn-full" data-i18n="nav_cta">Cotizar Proyecto</a>
+        </nav>
     </header>
 
     <main>
@@ -91,13 +145,30 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="budget">
+                                    <span data-i18n="form_budget_label">Presupuesto estimado</span>
+                                    <span class="label-optional" data-i18n="form_optional">(opcional)</span>
+                                </label>
+                                <div class="select-wrapper">
+                                    <select id="budget">
+                                        <option value="" selected data-i18n="form_budget_default">Sin definir aún</option>
+                                        <option value="100-300" data-i18n="form_budget_1">$100 – $300 USD</option>
+                                        <option value="300-600" data-i18n="form_budget_2">$300 – $600 USD</option>
+                                        <option value="600-1000" data-i18n="form_budget_3">$600 – $1.000 USD</option>
+                                        <option value="1000+" data-i18n="form_budget_4">$1.000+ USD</option>
+                                    </select>
+                                    <i data-lucide="chevron-down" class="select-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="needs" data-i18n="form_needs_label">¿Qué necesitas crear?</label>
                                 <input type="text" id="needs" required placeholder="Ej: Una landing para captar leads" data-i18n-ph="form_needs_ph">
                             </div>
 
                             <div class="form-group">
-                                <label for="contact-info" data-i18n="form_contact_label">Email o Teléfono</label>
-                                <input type="text" id="contact-info" required placeholder="email@ejemplo.com o +54 9..." data-i18n-ph="form_contact_ph">
+                                <label for="contact-info" data-i18n="form_contact_label">Email o WhatsApp</label>
+                                <input type="text" id="contact-info" required placeholder="email@ejemplo.com o +1 809..." data-i18n-ph="form_contact_ph">
                             </div>
 
                             <button type="submit" class="btn btn-primary btn-full" data-i18n="form_submit">
@@ -108,7 +179,17 @@
                         <div id="formSuccess" class="form-success hidden">
                             <i data-lucide="check-circle" class="success-icon"></i>
                             <h4 data-i18n="form_success_title">¡Solicitud Recibida!</h4>
-                            <p data-i18n="form_success_text">Nos pondremos en contacto contigo pronto.</p>
+                            <p data-i18n="form_success_text">Te estamos redirigiendo a WhatsApp para confirmar tu solicitud.</p>
+                            <div class="form-success-actions">
+                                <a href="#" id="successWhatsapp" class="btn btn-primary btn-full" target="_blank" rel="noopener">
+                                    <i data-lucide="message-circle"></i>
+                                    <span data-i18n="form_success_wa">Abrir WhatsApp</span>
+                                </a>
+                                <a href="#" id="successEmail" class="btn btn-outline btn-full">
+                                    <i data-lucide="mail"></i>
+                                    <span data-i18n="form_success_email">Enviar por email</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -206,6 +287,70 @@
             </div>
         </section>
 
+        <!-- 4.5 TESTIMONIOS / PRUEBA SOCIAL -->
+        <section class="section" id="testimonials">
+            <div class="container section-container">
+                <div class="section-header">
+                    <h2 data-i18n="testimonials_title">Lo que dicen nuestros clientes</h2>
+                    <p data-i18n="testimonials_sub">Resultados reales de quienes confiaron en nosotros.</p>
+                </div>
+
+                <!-- Barra de métricas (REEMPLAZA los valores por tus números reales) -->
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-num" data-i18n="stat1_num">24h</span>
+                        <span class="stat-label" data-i18n="stat1_label">Tiempo de respuesta</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num" data-i18n="stat2_num">100%</span>
+                        <span class="stat-label" data-i18n="stat2_label">Diseño a medida</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num" data-i18n="stat3_num">3</span>
+                        <span class="stat-label" data-i18n="stat3_label">Idiomas disponibles</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num" data-i18n="stat4_num">7 días</span>
+                        <span class="stat-label" data-i18n="stat4_label">Entrega promedio</span>
+                    </div>
+                </div>
+
+                <!-- REEMPLAZA cada tarjeta con un testimonio REAL de un cliente -->
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="stars" aria-label="5 de 5 estrellas">
+                            <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+                        </div>
+                        <p class="testimonial-quote" data-i18n="t1_quote">«[Escribe aquí el testimonio real de tu cliente. Qué problema tenía, cómo lo ayudaste y qué resultado obtuvo.]»</p>
+                        <div class="testimonial-author">
+                            <span class="author-name" data-i18n="t1_name">Nombre del cliente</span>
+                            <span class="author-role" data-i18n="t1_role">Negocio / Rubro</span>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars" aria-label="5 de 5 estrellas">
+                            <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+                        </div>
+                        <p class="testimonial-quote" data-i18n="t2_quote">«[Escribe aquí el testimonio real de tu cliente. Sé específico: menciona cifras o mejoras concretas si las hubo.]»</p>
+                        <div class="testimonial-author">
+                            <span class="author-name" data-i18n="t2_name">Nombre del cliente</span>
+                            <span class="author-role" data-i18n="t2_role">Negocio / Rubro</span>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars" aria-label="5 de 5 estrellas">
+                            <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+                        </div>
+                        <p class="testimonial-quote" data-i18n="t3_quote">«[Escribe aquí el testimonio real de tu cliente. Un comentario corto y honesto genera más confianza que uno largo.]»</p>
+                        <div class="testimonial-author">
+                            <span class="author-name" data-i18n="t3_name">Nombre del cliente</span>
+                            <span class="author-role" data-i18n="t3_role">Negocio / Rubro</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- 5.5 SOBRE NOSOTROS -->
         <section class="section" id="about">
             <div class="container section-container">
@@ -219,19 +364,19 @@
                         <div class="team-avatar"><img src="assets/team1.jpg" alt="Administradora" loading="lazy"></div>
                         <h4 data-i18n="team1_name">Nadine</h4>
                         <span class="team-role" data-i18n="team1_role">Administradora</span>
-                        <p data-i18n="team_desc">Breve descripción de la persona, su experiencia y lo que aporta al equipo.</p>
+                        <p data-i18n="team1_desc">Coordina cada proyecto de principio a fin: plazos, entregables y comunicación clara. Tu punto de contacto para que todo fluya sin complicaciones.</p>
                     </div>
                     <div class="team-card">
                         <div class="team-avatar"><img src="assets/team2.jpg" alt="Relaciones Públicas" loading="lazy"></div>
                         <h4 data-i18n="team2_name">Fraimy</h4>
                         <span class="team-role" data-i18n="team2_role">Relaciones Públicas</span>
-                        <p data-i18n="team_desc">Breve descripción de la persona, su experiencia y lo que aporta al equipo.</p>
+                        <p data-i18n="team2_desc">Entiende lo que tu negocio necesita y lo traduce en una estrategia digital. Cuida la relación con cada cliente para que te sientas acompañado en todo el proceso.</p>
                     </div>
                     <div class="team-card">
                         <div class="team-avatar"><img src="assets/team3.png" alt="Programador" loading="lazy"></div>
                         <h4 data-i18n="team3_name">Jeffry</h4>
                         <span class="team-role" data-i18n="team3_role">Programador</span>
-                        <p data-i18n="team_desc">Breve descripción de la persona, su experiencia y lo que aporta al equipo.</p>
+                        <p data-i18n="team3_desc">Convierte el diseño en un sitio rápido, seguro y optimizado. Se encarga del desarrollo, el rendimiento y de que tu web cargue impecable en cualquier dispositivo.</p>
                     </div>
                 </div>
             </div>
@@ -277,6 +422,7 @@
                 <div class="section-header">
                     <h2 data-i18n="pricing_title">Inversión Clara</h2>
                     <p data-i18n="pricing_sub">Precios transparentes para todos los niveles.</p>
+                    <span class="currency-note"><i data-lucide="info"></i> <span data-i18n="pricing_currency">Todos los precios están en dólares (USD)</span></span>
                 </div>
 
                 <div class="pricing-grid">
@@ -318,8 +464,95 @@
                 <div class="maintenance-box">
                     <i data-lucide="settings"></i>
                     <div>
-                        <strong data-i18n="maintenance_strong">Mantenimiento Mensual (Opcional): $20 - $100</strong>
+                        <strong data-i18n="maintenance_strong">Mantenimiento Mensual (Opcional): $20 - $100 USD</strong>
                         <p data-i18n="maintenance_desc">Nos encargamos de que tu sitio siempre esté rápido, seguro y actualizado.</p>
+                    </div>
+                </div>
+
+                <!-- Garantías / reversión de riesgo -->
+                <div class="guarantee-strip">
+                    <div class="guarantee-item">
+                        <i data-lucide="shield-check"></i>
+                        <span data-i18n="guarantee_1">Garantía de satisfacción</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i data-lucide="repeat"></i>
+                        <span data-i18n="guarantee_2">Revisiones incluidas</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i data-lucide="unlock"></i>
+                        <span data-i18n="guarantee_3">El sitio queda 100% tuyo</span>
+                    </div>
+                    <div class="guarantee-item">
+                        <i data-lucide="x-circle"></i>
+                        <span data-i18n="guarantee_4">Sin permanencia obligatoria</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. FAQ -->
+        <section class="section alt-bg" id="faq">
+            <div class="container section-container faq-container">
+                <div class="section-header">
+                    <h2 data-i18n="faq_title">Preguntas Frecuentes</h2>
+                    <p data-i18n="faq_sub">Resolvemos las dudas más comunes antes de empezar.</p>
+                </div>
+
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span data-i18n="faq_q1">¿Cuánto tarda mi sitio web?</span>
+                            <i data-lucide="plus" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a1">Una landing simple suele estar lista en 3 a 7 días. Proyectos más grandes (multipágina o e-commerce) toman de 2 a 4 semanas, según el alcance. Te damos una fecha estimada al inicio.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span data-i18n="faq_q2">¿Cómo es el proceso de pago?</span>
+                            <i data-lucide="plus" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a2">Trabajamos con un 50% al inicio para arrancar y el 50% restante al entregar, antes de publicar. Sin sorpresas: el precio que acordamos es el que pagas.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span data-i18n="faq_q3">¿El dominio y el hosting están incluidos?</span>
+                            <i data-lucide="plus" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a3">Te asesoramos y configuramos todo. El costo del dominio y el hosting depende del proveedor, pero te guiamos para elegir la opción más económica y lo dejamos funcionando.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span data-i18n="faq_q4">¿El sitio queda a mi nombre?</span>
+                            <i data-lucide="plus" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a4">Sí. Al finalizar, el sitio, el dominio y todas las cuentas quedan 100% a tu nombre. Tú eres el dueño total de tu proyecto.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span data-i18n="faq_q5">¿Cuántas revisiones incluye?</span>
+                            <i data-lucide="plus" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a5">Incluimos rondas de revisión para ajustar el diseño hasta que estés conforme. Queremos que ames tu sitio, no solo que lo aceptes.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span data-i18n="faq_q6">¿Qué pasa después de lanzar?</span>
+                            <i data-lucide="plus" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a6">Te damos soporte tras el lanzamiento y, si quieres, un plan de mantenimiento mensual opcional para mantener tu sitio rápido, seguro y actualizado.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -330,23 +563,58 @@
             <div class="container cta-container">
                 <h2 data-i18n="cta_title">¿Listo para subir de nivel?</h2>
                 <p data-i18n="cta_sub">No pierdas más clientes por no tener un sitio web profesional.</p>
-                <a href="#hero-form" class="btn btn-primary btn-lg" data-i18n="cta_btn">Solicitar cotización ahora</a>
+                <div class="cta-actions">
+                    <a href="#hero-form" class="btn btn-primary btn-lg" data-i18n="cta_btn">Solicitar cotización ahora</a>
+                    <a href="#" id="ctaWhatsapp" class="btn btn-outline btn-lg" target="_blank" rel="noopener">
+                        <i data-lucide="message-circle"></i>
+                        <span data-i18n="cta_whatsapp">Escríbenos por WhatsApp</span>
+                    </a>
+                </div>
+                <p class="cta-urgency"><i data-lucide="zap"></i> <span data-i18n="cta_urgency">Cupos limitados cada mes para garantizar calidad.</span></p>
             </div>
         </section>
     </main>
 
     <footer class="footer">
-        <div class="container footer-container">
-            <div class="logo">
-                <img src="assets/logo.png" alt="North Creative Labs" class="logo-img">
-                <span class="logo-text">North Creative Labs</span>
+        <div class="container footer-top">
+            <div class="footer-brand">
+                <div class="logo">
+                    <img src="assets/logo.png" alt="North Creative Labs" class="logo-img">
+                    <span class="logo-text">North Creative Labs</span>
+                </div>
+                <p class="footer-tagline" data-i18n="footer_tagline">Diseño web premium y accesible para freelancers y negocios locales.</p>
             </div>
-            <p data-i18n="footer_copy">&copy; 2026. Soluciones digitales premium.</p>
+
+            <div class="footer-col">
+                <h5 data-i18n="footer_links_title">Navegación</h5>
+                <a href="#services" data-i18n="nav_services">Servicios</a>
+                <a href="#portfolio" data-i18n="nav_portfolio">Portafolio</a>
+                <a href="#pricing" data-i18n="nav_pricing">Precios</a>
+                <a href="#faq" data-i18n="nav_faq">FAQ</a>
+            </div>
+
+            <div class="footer-col">
+                <h5 data-i18n="footer_contact_title">Contacto</h5>
+                <!-- Los enlaces se completan automáticamente desde el objeto CONTACT en app.js -->
+                <a id="footerWhatsapp" href="#" target="_blank" rel="noopener"><i data-lucide="message-circle"></i> WhatsApp</a>
+                <a id="footerEmail" href="#"><i data-lucide="mail"></i> Email</a>
+                <a id="footerInstagram" href="#" target="_blank" rel="noopener"><i data-lucide="instagram"></i> Instagram</a>
+            </div>
+        </div>
+
+        <div class="container footer-bottom">
+            <p data-i18n="footer_copy">&copy; 2026 North Creative Labs. Soluciones digitales premium.</p>
+            <p class="footer-legal"><a href="#" data-i18n="footer_privacy">Política de privacidad</a></p>
         </div>
     </footer>
 
-    <script src="translations.js?v=2"></script>
-    <script src="app.js?v=2"></script>
+    <!-- Botón flotante de WhatsApp (href se completa desde app.js) -->
+    <a id="floatingWhatsapp" class="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+        <i data-lucide="message-circle"></i>
+    </a>
+
+    <script src="translations.js?v=3"></script>
+    <script src="app.js?v=3"></script>
     <script>
         lucide.createIcons();
     </script>
