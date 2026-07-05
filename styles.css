@@ -617,7 +617,11 @@ select { appearance: none; cursor: pointer; }
     color: #fff;
 }
 
-a.portfolio-item {
+a.portfolio-item,
+a.portfolio-item:link,
+a.portfolio-item:visited,
+a.portfolio-item:hover,
+a.portfolio-item:active {
     display: block;
     text-decoration: none;
     color: inherit;
