@@ -153,19 +153,33 @@ h1, h2, h3, h4 {
 }
 
 .logo-img {
-    width: 80px;
-    height: 80px;
-    max-width: 80px;
-    max-height: 80px;
+    width: 44px;
+    height: 44px;
+    max-width: 44px;
+    max-height: 44px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 10px;
     display: block;
     flex-shrink: 0;
 }
 
 .logo-text {
-    font-size: 1.2rem;
+    font-size: 1rem;
     white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .logo-img {
+        width: 80px;
+        height: 80px;
+        max-width: 80px;
+        max-height: 80px;
+        border-radius: 12px;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
 }
 
 .desktop-nav {
@@ -196,15 +210,31 @@ h1, h2, h3, h4 {
     gap: 16px;
 }
 
-/* Selector de idioma */
+/* Selector de idioma: en móvil vive dentro del menú desplegable, no en la
+   barra superior, para dejarle espacio al botón de tema y al hamburguesa */
+.nav-actions > .lang-switcher {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .nav-actions > .lang-switcher {
+        display: flex;
+    }
+}
+
 .lang-switcher {
-    display: flex;
     align-items: center;
     gap: 2px;
     padding: 3px;
     background: var(--glass);
     border: 1px solid var(--border);
     border-radius: 100px;
+}
+
+.lang-switcher-mobile {
+    display: flex;
+    align-self: flex-start;
+    margin-top: 8px;
 }
 
 .lang-btn {
@@ -255,12 +285,12 @@ h1, h2, h3, h4 {
     height: 18px;
 }
 
-.nav-cta {
+.nav-actions .nav-cta {
     display: none;
 }
 
 @media (min-width: 768px) {
-    .nav-cta { display: inline-flex; }
+    .nav-actions .nav-cta { display: inline-flex; }
 }
 
 /* Buttons */
@@ -449,6 +479,13 @@ input:focus, select:focus {
 }
 
 select { appearance: none; cursor: pointer; }
+
+/* El menú desplegable de <option> lo pinta el navegador/SO con fondo claro,
+   sin importar el tema del sitio, así que el texto siempre debe ser oscuro */
+select option {
+    color: #111;
+    background: #fff;
+}
 
 .select-icon {
     position: absolute;
