@@ -37,7 +37,7 @@
 
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="apple-touch-icon" href="assets/favicon.png">
-    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="styles.css?v=4">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -71,7 +71,6 @@
             <nav class="desktop-nav">
                 <a href="#services" data-i18n="nav_services">Servicios</a>
                 <a href="#portfolio" data-i18n="nav_portfolio">Portafolio</a>
-                <a href="#testimonials" data-i18n="nav_testimonials">Testimonios</a>
                 <a href="#about" data-i18n="nav_about">Nosotros</a>
                 <a href="#pricing" data-i18n="nav_pricing">Precios</a>
                 <a href="#faq" data-i18n="nav_faq">FAQ</a>
@@ -99,7 +98,6 @@
         <nav class="mobile-menu" id="mobileMenu" aria-label="Menú principal">
             <a href="#services" data-i18n="nav_services">Servicios</a>
             <a href="#portfolio" data-i18n="nav_portfolio">Portafolio</a>
-            <a href="#testimonials" data-i18n="nav_testimonials">Testimonios</a>
             <a href="#about" data-i18n="nav_about">Nosotros</a>
             <a href="#pricing" data-i18n="nav_pricing">Precios</a>
             <a href="#faq" data-i18n="nav_faq">FAQ</a>
@@ -146,7 +144,7 @@
                         <form id="leadForm" class="lead-form">
                             <div class="form-group">
                                 <label for="name" data-i18n="form_name_label">Nombre</label>
-                                <input type="text" id="name" required placeholder="Tu nombre o empresa" data-i18n-ph="form_name_ph">
+                                <input type="text" id="name" required autocomplete="name" placeholder="Tu nombre o empresa" data-i18n-ph="form_name_ph">
                             </div>
 
                             <div class="form-group">
@@ -188,7 +186,8 @@
 
                             <div class="form-group">
                                 <label for="contact-info" data-i18n="form_contact_label">Email o WhatsApp</label>
-                                <input type="text" id="contact-info" required placeholder="email@ejemplo.com o +1 809..." data-i18n-ph="form_contact_ph">
+                                <input type="text" id="contact-info" required autocomplete="off" placeholder="email@ejemplo.com o +1 809..." data-i18n-ph="form_contact_ph" aria-describedby="contact-error">
+                                <p id="contact-error" class="field-error hidden" data-i18n="form_contact_error">Ingresa un email válido o un número de WhatsApp.</p>
                             </div>
 
                             <button type="submit" class="btn btn-primary btn-full" data-i18n="form_submit">
@@ -320,10 +319,12 @@
         <!-- 4.5 TESTIMONIOS / PRUEBA SOCIAL -->
         <section class="section" id="testimonials">
             <div class="container section-container">
+                <!-- Encabezado de testimonios oculto hasta tener reseñas reales de clientes
                 <div class="section-header">
                     <h2 data-i18n="testimonials_title">Lo que dicen nuestros clientes</h2>
                     <p data-i18n="testimonials_sub">Resultados reales de quienes confiaron en nosotros.</p>
                 </div>
+                -->
 
                 <!-- Barra de métricas (REEMPLAZA los valores por tus números reales) -->
                 <div class="stats-bar">
@@ -345,7 +346,7 @@
                     </div>
                 </div>
 
-                <!-- REEMPLAZA cada tarjeta con un testimonio REAL de un cliente -->
+                <!-- Testimonios ocultos hasta tener reseñas reales de clientes
                 <div class="testimonials-grid">
                     <div class="testimonial-card">
                         <div class="stars" aria-label="5 de 5 estrellas">
@@ -378,6 +379,7 @@
                         </div>
                     </div>
                 </div>
+                -->
             </div>
         </section>
 
@@ -634,7 +636,7 @@
 
         <div class="container footer-bottom">
             <p data-i18n="footer_copy">&copy; 2026 North Creative Labs. Soluciones digitales premium.</p>
-            <p class="footer-legal"><a href="#" data-i18n="footer_privacy">Política de privacidad</a></p>
+            <p class="footer-legal"><a href="privacidad.html" data-i18n="footer_privacy">Política de privacidad</a></p>
         </div>
     </footer>
 
@@ -643,8 +645,14 @@
         <i data-lucide="message-circle"></i>
     </a>
 
-    <script src="translations.js?v=3"></script>
-    <script src="app.js?v=3"></script>
+    <!-- Barra CTA fija (solo móvil): aparece al salir del hero para no perder la conversión -->
+    <a href="#hero-form" class="mobile-cta-bar" id="mobileCtaBar">
+        <span data-i18n="hero_cta_quote">Solicitar cotización</span>
+        <i data-lucide="arrow-right"></i>
+    </a>
+
+    <script src="translations.js?v=4"></script>
+    <script src="app.js?v=4"></script>
     <script>
         lucide.createIcons();
     </script>

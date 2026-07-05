@@ -17,7 +17,7 @@
    (formulario, botón flotante, footer y CTA) quedará conectado.
    ============================================================ */
 const CONTACT = {
-    whatsapp: '10000000000',                              // Tu WhatsApp con código de país, SOLO dígitos. Ej: 18095551234
+    whatsapp: '18297129741',                              // Tu WhatsApp con código de país, SOLO dígitos. Ej: 18095551234
     email: 'hola@northcreativelabs.com',                  // Tu email real
     instagram: 'https://instagram.com/northcreativelabs'  // URL completa de tu Instagram
 };
@@ -112,6 +112,21 @@ function buildLeadMessage(data) {
         (d.msg_contact || 'Mi contacto') + ': ' + data.contact
     ];
     return lines.join('\n');
+}
+
+/**
+ * Valida que el dato de contacto sea un email plausible O un número de teléfono.
+ * El campo acepta ambos formatos, así que se considera válido si cumple cualquiera.
+ * @param {string} value - Texto introducido por el usuario.
+ * @returns {boolean} true si parece un email o un teléfono válido.
+ */
+function isValidContact(value) {
+    const v = (value || '').trim();
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Teléfono: al menos 7 dígitos; se permiten +, espacios, guiones y paréntesis.
+    const phoneRe = /^\+?[\d\s().-]{7,}$/;
+    const digits = (v.match(/\d/g) || []).length;
+    return emailRe.test(v) || (phoneRe.test(v) && digits >= 7);
 }
 
 /**
@@ -222,6 +237,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 contact: document.getElementById('contact-info').value.trim()
             };
 
+            // Validar el contacto: sin un email/teléfono válido no podríamos responder
+            const contactInput = document.getElementById('contact-info');
+            const contactError = document.getElementById('contact-error');
+            if (!isValidContact(data.contact)) {
+                if (contactError) contactError.classList.remove('hidden');
+                contactInput.classList.add('input-error');
+                contactInput.focus();
+                return;
+            }
+            if (contactError) contactError.classList.add('hidden');
+            contactInput.classList.remove('input-error');
+
             // Construir destinos de envío
             const message = buildLeadMessage(data);
             const waUrl = 'https://wa.me/' + CONTACT.whatsapp + '?text=' + encodeURIComponent(message);
@@ -274,4 +301,44 @@ document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
         });
     });
+
+    // ── Limpiar el error de contacto en cuanto el usuario corrige ──
+    const contactInput = document.getElementById('contact-info');
+    const contactError = document.getElementById('contact-error');
+    if (contactInput) {
+        contactInput.addEventListener('input', () => {
+            if (contactError) contactError.classList.add('hidden');
+            contactInput.classList.remove('input-error');
+        });
+    }
+
+    // ── Resaltar en el nav la sección visible actualmente ──
+    const navLinks = document.querySelectorAll('.desktop-nav a');
+    const spySections = ['services', 'portfolio', 'about', 'pricing', 'faq']
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+    if (navLinks.length && spySections.length) {
+        const navSpy = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                navLinks.forEach(a =>
+                    a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+            });
+        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+        spySections.forEach(s => navSpy.observe(s));
+    }
+
+    // ── Barra CTA fija en móvil: se muestra al dejar atrás el hero ──
+    const ctaBar = document.getElementById('mobileCtaBar');
+    const heroSection = document.querySelector('.hero');
+    if (ctaBar && heroSection) {
+        const ctaSpy = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const pastHero = !entry.isIntersecting;
+                ctaBar.classList.toggle('show', pastHero);
+                document.body.classList.toggle('cta-bar-visible', pastHero);
+            });
+        }, { rootMargin: '-70px 0px 0px 0px', threshold: 0 });
+        ctaSpy.observe(heroSection);
+    }
 });

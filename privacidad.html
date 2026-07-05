@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad | North Creative Labs</title>
+    <meta name="description" content="Cómo North Creative Labs trata los datos que compartes a través de este sitio.">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#050505">
+    <!-- Tema: aplica la preferencia guardada antes del primer render (evita parpadeo) -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var theme = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) { /* almacenamiento no disponible: se usa el tema oscuro por defecto */ }
+        })();
+    </script>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Estilos propios de la página legal (documento de texto simple) */
+        .legal-main {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 24px 80px;
+        }
+        .legal-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 32px;
+            transition: var(--transition);
+        }
+        .legal-back:hover { color: var(--text-primary); }
+        .legal-back i { width: 16px; height: 16px; }
+        .legal-main h1 { font-size: 2rem; margin-bottom: 8px; }
+        .legal-updated { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 40px; }
+        .legal-main h2 { font-size: 1.25rem; margin: 36px 0 12px; }
+        .legal-main p { color: var(--text-secondary); margin-bottom: 12px; }
+        .legal-main ul { color: var(--text-secondary); margin: 0 0 12px 20px; }
+        .legal-main li { margin-bottom: 6px; }
+        .legal-main a { color: var(--text-primary); }
+    </style>
+</head>
+<body>
+    <div class="grain-overlay"></div>
+
+    <main class="legal-main">
+        <a href="index.html" class="legal-back"><i data-lucide="arrow-left"></i> Volver al inicio</a>
+
+        <h1>Política de Privacidad</h1>
+        <p class="legal-updated">Última actualización: julio de 2026</p>
+
+        <p>En <strong>North Creative Labs</strong> respetamos tu privacidad. Esta página explica de forma sencilla qué datos tratamos cuando usas este sitio y para qué.</p>
+
+        <h2>Qué datos recogemos</h2>
+        <p>Únicamente los que decides compartir con nosotros al completar el formulario de cotización: nombre o empresa, tipo de proyecto, presupuesto estimado (opcional), lo que necesitas y tu dato de contacto (email o WhatsApp).</p>
+
+        <h2>Cómo se envían tus datos</h2>
+        <p>Al enviar el formulario, la información se transmite directamente a nuestro WhatsApp o correo electrónico para que podamos responderte. Este sitio es estático: <strong>no almacena tus datos en ninguna base de datos ni servidor propio</strong>.</p>
+
+        <h2>Cookies y almacenamiento</h2>
+        <p>No usamos cookies de rastreo ni herramientas de analítica de terceros. Solo guardamos en tu navegador (localStorage) tu preferencia de idioma y de tema (claro/oscuro), para recordarlas en tu próxima visita. Puedes borrarlas limpiando los datos de tu navegador.</p>
+
+        <h2>Para qué usamos tus datos</h2>
+        <ul>
+            <li>Responder a tu solicitud y preparar una propuesta.</li>
+            <li>Comunicarnos contigo sobre tu proyecto.</li>
+        </ul>
+        <p>No vendemos, alquilamos ni compartimos tus datos con terceros.</p>
+
+        <h2>Tus derechos</h2>
+        <p>Puedes solicitar en cualquier momento el acceso, la corrección o la eliminación de la información que nos hayas enviado. Solo escríbenos y lo gestionamos.</p>
+
+        <h2>Contacto</h2>
+        <p>¿Dudas sobre esta política? Escríbenos a <a href="mailto:hola@northcreativelabs.com">hola@northcreativelabs.com</a>.</p>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
