@@ -579,15 +579,6 @@ select { appearance: none; cursor: pointer; }
     background: #000;
 }
 
-.wide-item {
-    grid-column: 1 / -1;
-    aspect-ratio: 16/9;
-}
-
-@media (min-width: 768px) {
-    .wide-item { aspect-ratio: 21/9; }
-}
-
 .portfolio-item img {
     width: 100%;
     height: 100%;
@@ -610,9 +601,44 @@ select { appearance: none; cursor: pointer; }
     align-items: flex-end;
 }
 
+/* Texto fijo en blanco: el overlay siempre va sobre foto u overlay oscuro,
+   sin importar si el tema del sitio es claro u oscuro */
 .portfolio-overlay span {
     font-size: 1.1rem;
     font-weight: 500;
+    color: #fff;
+}
+
+.portfolio-overlay i {
+    width: 18px;
+    height: 18px;
+    margin-left: auto;
+    flex-shrink: 0;
+    color: #fff;
+}
+
+a.portfolio-item {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Etiqueta "SaaS en producción" sobre la captura de un producto propio */
+.portfolio-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #fff;
 }
 
 /* About / Team */
