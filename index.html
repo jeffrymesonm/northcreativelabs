@@ -6,6 +6,16 @@
     <title>North Creative Labs | Soluciones Digitales Premium</title>
     <meta name="description" content="Diseño moderno y soluciones funcionales para freelancers y negocios locales. Premium, accesible y orientado a resultados.">
     <meta name="theme-color" content="#050505">
+    <!-- Tema: aplica la preferencia guardada antes del primer render (evita parpadeo) -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var theme = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) { /* almacenamiento no disponible: se usa el tema oscuro por defecto */ }
+        })();
+    </script>
     <!-- REEMPLAZA https://northcreativelabs.com/ por tu dominio real -->
     <link rel="canonical" href="https://northcreativelabs.com/">
 
@@ -73,6 +83,10 @@
                     <button type="button" class="lang-btn" data-lang="en">EN</button>
                     <button type="button" class="lang-btn" data-lang="de">DE</button>
                 </div>
+                <!-- Conmutador de tema claro/oscuro -->
+                <button type="button" class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" title="Cambiar tema">
+                    <i data-lucide="moon"></i>
+                </button>
                 <a href="#hero-form" class="btn btn-outline btn-sm nav-cta" data-i18n="nav_cta">Cotizar Proyecto</a>
                 <!-- Botón de menú móvil -->
                 <button type="button" class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">

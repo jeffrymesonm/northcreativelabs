@@ -2,6 +2,7 @@
  * app.js
  * Lógica del sitio North Creative Labs:
  *  - Internacionalización (es/en/de) con persistencia en localStorage.
+ *  - Conmutador de tema claro/oscuro con persistencia en localStorage.
  *  - Menú móvil (hamburguesa).
  *  - Acordeón de preguntas frecuentes (FAQ).
  *  - Envío del formulario de cotización vía WhatsApp (deep link) y email (mailto).
@@ -113,7 +114,41 @@ function buildLeadMessage(data) {
     return lines.join('\n');
 }
 
+/**
+ * Aplica un tema de color a toda la página.
+ * Fija data-theme en <html>, persiste la elección, sincroniza el color de la
+ * barra del navegador (meta theme-color) y actualiza el icono del botón.
+ * @param {string} theme - 'light' | 'dark'.
+ */
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem('theme', theme); } catch (e) { /* almacenamiento no disponible */ }
+
+    // Sincroniza el color de la barra del navegador con el fondo del tema.
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#fafafa' : '#050505');
+
+    // Muestra el icono de la acción disponible: sol en oscuro, luna en claro.
+    const toggle = document.getElementById('themeToggle');
+    if (toggle) {
+        toggle.innerHTML = '<i data-lucide="' + (theme === 'light' ? 'moon' : 'sun') + '"></i>';
+        if (window.lucide) lucide.createIcons();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // ── Tema: restaurar el valor ya aplicado por el script en línea del <head> ──
+    const currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    applyTheme(currentTheme);
+
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+        });
+    }
+
     // ── Idioma: restaurar preferencia guardada (o español por defecto) ──
     const savedLang = (() => {
         try { return localStorage.getItem('lang'); } catch (e) { return null; }
