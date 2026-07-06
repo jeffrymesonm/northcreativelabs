@@ -139,9 +139,15 @@
 
                 <div class="hero-form-wrapper" id="hero-form">
                     <div class="form-card">
-                        <h3 data-i18n="form_title">Cuentanos de tu proyecto</h3>
-                        <p class="form-subtitle" data-i18n="form_subtitle">Enviaremos una propuesta enseguida.</p>
+                        <div class="form-progress" id="formProgress">
+                            <span class="progress-label" id="progressLabel" data-i18n="progress_step1">Paso 1 de 2</span>
+                            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+                        </div>
+
                         <form id="leadForm" class="lead-form">
+                            <h3 data-i18n="form_title">Cuentanos de tu proyecto</h3>
+                            <p class="form-subtitle" data-i18n="form_subtitle">Enviaremos una propuesta enseguida.</p>
+
                             <div class="form-group">
                                 <label for="name" data-i18n="form_name_label">Nombre</label>
                                 <input type="text" id="name" required autocomplete="name" placeholder="Tu nombre o empresa" data-i18n-ph="form_name_ph">
@@ -195,6 +201,156 @@
                             </button>
                             <p class="form-trust-text"><i data-lucide="clock"></i> <span data-i18n="form_trust">Respondemos en menos de 24 horas</span></p>
                         </form>
+
+                        <!-- Pantalla de transición entre Paso 1 y Paso 2 -->
+                        <div id="transitionScreen" class="transition-screen hidden">
+                            <i data-lucide="check-circle" class="transition-icon"></i>
+                            <h3 data-i18n="transition_title">¡Perfecto!</h3>
+                            <p class="transition-text" data-i18n="transition_text">Ya recibimos tu solicitud. Si completas esta información adicional podremos preparar una propuesta mucho más precisa y reducir el tiempo de desarrollo.</p>
+                            <div class="transition-time">
+                                <i data-lucide="clock"></i>
+                                <span data-i18n="transition_time_label">Tiempo estimado</span>: <strong data-i18n="transition_time_value">1 minuto</strong>
+                            </div>
+                            <button type="button" id="continueToStep2" class="btn btn-primary btn-full" data-i18n="transition_continue">Continuar</button>
+                            <button type="button" id="skipStep2" class="btn-text-link" data-i18n="transition_later">Lo haré más tarde</button>
+                        </div>
+
+                        <!-- Paso 2: información adicional para preparar la propuesta -->
+                        <form id="step2Form" class="lead-form step2-form hidden">
+                            <h3 data-i18n="step2_title">Cuéntanos un poco más</h3>
+                            <p class="form-subtitle" data-i18n="step2_subtitle">Mientras más información recibamos, mejor podremos asesorarte.</p>
+
+                            <div class="form-section">
+                                <h4 class="form-section-title"><i data-lucide="building-2"></i> <span data-i18n="s1_title">Sobre tu negocio</span></h4>
+
+                                <div class="form-group">
+                                    <label for="business-name" data-i18n="s1_business_name_label">Nombre del negocio <span class="required-mark">*</span></label>
+                                    <input type="text" id="business-name" name="business_name" required placeholder="Ej: Salón Bella Vista" data-i18n-ph="s1_business_name_ph">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="business-desc" data-i18n="s1_business_desc_label">¿A qué se dedica tu empresa? <span class="required-mark">*</span></label>
+                                    <textarea id="business-desc" name="business_description" required rows="3" placeholder="Cuéntanos brevemente qué hace tu negocio..." data-i18n-ph="s1_business_desc_ph"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label data-i18n="s1_has_website_label">¿Ya tienes una página web?</label>
+                                    <div class="chip-group chip-group-inline">
+                                        <label class="chip">
+                                            <input type="radio" name="has_website" value="yes" id="hasWebsiteYes">
+                                            <span data-i18n="s1_has_website_yes">Sí</span>
+                                        </label>
+                                        <label class="chip">
+                                            <input type="radio" name="has_website" value="no">
+                                            <span data-i18n="s1_has_website_no">No</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group conditional-field" id="websiteUrlField">
+                                    <label for="website-url" data-i18n="s1_website_url_label">URL de la página</label>
+                                    <input type="url" id="website-url" name="website_url" placeholder="https://tunegocio.com" data-i18n-ph="s1_website_url_ph">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h4 class="form-section-title"><i data-lucide="target"></i> <span data-i18n="s2_title">Objetivo del proyecto</span></h4>
+                                <div class="form-group">
+                                    <label data-i18n="s2_question">¿Qué quieres lograr?</label>
+                                    <div class="chip-group">
+                                        <label class="chip"><input type="checkbox" name="goals" value="more_clients"><span data-i18n="s2_goal_clients">Conseguir más clientes</span></label>
+                                        <label class="chip"><input type="checkbox" name="goals" value="sell_products"><span data-i18n="s2_goal_sell">Vender productos</span></label>
+                                        <label class="chip"><input type="checkbox" name="goals" value="show_services"><span data-i18n="s2_goal_show">Mostrar mis servicios</span></label>
+                                        <label class="chip"><input type="checkbox" name="goals" value="bookings"><span data-i18n="s2_goal_bookings">Recibir reservas</span></label>
+                                        <label class="chip"><input type="checkbox" name="goals" value="quotes"><span data-i18n="s2_goal_quotes">Recibir cotizaciones</span></label>
+                                        <label class="chip"><input type="checkbox" name="goals" value="automate"><span data-i18n="s2_goal_automate">Automatizar procesos</span></label>
+                                        <label class="chip"><input type="checkbox" name="goals" value="improve_existing"><span data-i18n="s2_goal_improve">Mejorar una página existente</span></label>
+                                        <label class="chip"><input type="checkbox" name="goals" value="other" id="goalOtherCheckbox"><span data-i18n="s2_goal_other">Otro</span></label>
+                                    </div>
+                                </div>
+                                <div class="form-group conditional-field" id="goalOtherField">
+                                    <input type="text" id="goal-other-text" name="goals_other" placeholder="Cuéntanos cuál" data-i18n-ph="s2_goal_other_ph">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h4 class="form-section-title"><i data-lucide="puzzle"></i> <span data-i18n="s3_title">Funcionalidades</span></h4>
+                                <div class="form-group">
+                                    <div class="chip-group">
+                                        <label class="chip"><input type="checkbox" name="features" value="whatsapp"><span data-i18n="s3_feat_whatsapp">WhatsApp</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="contact_form"><span data-i18n="s3_feat_contact">Formulario de contacto</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="booking_calendar"><span data-i18n="s3_feat_booking">Agenda de citas</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="online_store"><span data-i18n="s3_feat_store">Tienda online</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="blog"><span data-i18n="s3_feat_blog">Blog</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="chat"><span data-i18n="s3_feat_chat">Chat</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="client_area"><span data-i18n="s3_feat_client_area">Área privada para clientes</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="user_login"><span data-i18n="s3_feat_login">Login de usuarios</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="admin_panel"><span data-i18n="s3_feat_admin">Panel administrativo</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="social_integration"><span data-i18n="s3_feat_social">Integración con redes sociales</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="online_payments"><span data-i18n="s3_feat_payments">Pagos online</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="seo"><span data-i18n="s3_feat_seo">SEO</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="multilanguage"><span data-i18n="s3_feat_multilang">Multilenguaje</span></label>
+                                        <label class="chip"><input type="checkbox" name="features" value="other" id="featureOtherCheckbox"><span data-i18n="s3_feat_other">Otro</span></label>
+                                    </div>
+                                </div>
+                                <div class="form-group conditional-field" id="featureOtherField">
+                                    <input type="text" id="feature-other-text" name="features_other" placeholder="Cuéntanos cuál" data-i18n-ph="s3_feat_other_ph">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h4 class="form-section-title"><i data-lucide="package"></i> <span data-i18n="s4_title">Contenido disponible</span></h4>
+                                <div class="form-group">
+                                    <label data-i18n="s4_intro">Ya tengo:</label>
+                                    <div class="chip-group">
+                                        <label class="chip"><input type="checkbox" name="existing_content" value="logo"><span data-i18n="s4_content_logo">Logo</span></label>
+                                        <label class="chip"><input type="checkbox" name="existing_content" value="brand_manual"><span data-i18n="s4_content_brand">Manual de marca</span></label>
+                                        <label class="chip"><input type="checkbox" name="existing_content" value="photos"><span data-i18n="s4_content_photos">Fotos</span></label>
+                                        <label class="chip"><input type="checkbox" name="existing_content" value="videos"><span data-i18n="s4_content_videos">Videos</span></label>
+                                        <label class="chip"><input type="checkbox" name="existing_content" value="texts"><span data-i18n="s4_content_texts">Textos</span></label>
+                                        <label class="chip"><input type="checkbox" name="existing_content" value="catalog"><span data-i18n="s4_content_catalog">Catálogo</span></label>
+                                        <label class="chip"><input type="checkbox" name="existing_content" value="domain"><span data-i18n="s4_content_domain">Dominio</span></label>
+                                        <label class="chip"><input type="checkbox" name="existing_content" value="hosting"><span data-i18n="s4_content_hosting">Hosting</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h4 class="form-section-title"><i data-lucide="palette"></i> <span data-i18n="s5_title">Diseño</span></h4>
+                                <div class="form-group">
+                                    <label for="design-ref" data-i18n="s5_ref_label">¿Hay alguna página que te guste?</label>
+                                    <input type="url" id="design-ref" name="design_reference_url" placeholder="https://ejemplo.com" data-i18n-ph="s5_ref_ph">
+                                </div>
+                                <div class="form-group">
+                                    <label for="design-style" data-i18n="s5_style_label">Describe el estilo que buscas</label>
+                                    <textarea id="design-style" name="design_style" rows="2" placeholder="Ej: Minimalista, colores oscuros, elegante..." data-i18n-ph="s5_style_ph"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h4 class="form-section-title"><i data-lucide="search"></i> <span data-i18n="s6_title">SEO</span></h4>
+                                <div class="form-group">
+                                    <label for="seo-location" data-i18n="s6_location_label">¿En qué ciudad o país ofrecerás tus servicios?</label>
+                                    <input type="text" id="seo-location" name="seo_location" placeholder="Ej: Santo Domingo, República Dominicana" data-i18n-ph="s6_location_ph">
+                                </div>
+                                <div class="form-group">
+                                    <label for="seo-service" data-i18n="s6_service_label">¿Cuál es tu servicio principal?</label>
+                                    <input type="text" id="seo-service" name="seo_main_service" placeholder="Ej: Diseño de uñas, reparación de celulares..." data-i18n-ph="s6_service_ph">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h4 class="form-section-title"><i data-lucide="message-square-plus"></i> <span data-i18n="s7_title">Información adicional</span></h4>
+                                <div class="form-group">
+                                    <label for="additional-info" data-i18n="s7_label">¿Hay algo más que debamos saber?</label>
+                                    <textarea id="additional-info" name="additional_info" rows="4" placeholder="Cuéntanos cualquier detalle adicional..." data-i18n-ph="s7_ph"></textarea>
+                                </div>
+                            </div>
+
+                            <p class="step2-required-note" data-i18n="step2_required_note">Solo el nombre del negocio y la descripción son obligatorios. Todo lo demás es opcional.</p>
+                            <button type="submit" class="btn btn-primary btn-full" data-i18n="step2_submit">Enviar información</button>
+                        </form>
+
                         <div id="formSuccess" class="form-success hidden">
                             <i data-lucide="check-circle" class="success-icon"></i>
                             <h4 data-i18n="form_success_title">¡Solicitud Recibida!</h4>
@@ -651,8 +807,9 @@
         <i data-lucide="arrow-right"></i>
     </a>
 
-    <script src="translations.js?v=4"></script>
-    <script src="app.js?v=4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="translations.js?v=5"></script>
+    <script src="app.js?v=5"></script>
     <script>
         lucide.createIcons();
     </script>

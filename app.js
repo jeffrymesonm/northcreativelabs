@@ -22,6 +22,120 @@ const CONTACT = {
     instagram: 'https://instagram.com/northcreativelabs'  // URL completa de tu Instagram
 };
 
+/* ============================================================
+   CONFIGURACIÓN DE SUPABASE  ←  EDITA SOLO ESTE BLOQUE
+   ------------------------------------------------------------
+   Project Settings → API, en tu proyecto Supabase:
+     - url: "Project URL"
+     - anonKey: "anon public" key (o "publishable" key nueva)
+   ============================================================ */
+const SUPABASE_CONFIG = {
+    url: 'https://hmzjubswhwlkciwltyju.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtemp1YnN3aHdsa2Npd2x0eWp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyNzg5MTQsImV4cCI6MjA5ODg1NDkxNH0.8bCWhb684KGqK3Mf71QRcK2z14f85EEjSVgHBH4Bhpk'
+};
+
+const supabaseClient = (window.supabase && SUPABASE_CONFIG.anonKey.indexOf('PEGA_AQUI') === -1)
+    ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
+    : null;
+
+if (!supabaseClient) {
+    console.warn('Supabase no está configurado: pega tu anon/publishable key en SUPABASE_CONFIG (app.js). Mientras tanto, los leads no se guardarán en la base de datos.');
+}
+
+// El id del lead viaja en memoria y en sessionStorage (por si el usuario
+// recarga la página entre el Paso 1 y el Paso 2 dentro de la misma sesión).
+let currentLeadId = null;
+
+/**
+ * Devuelve el id del lead actual (memoria o sessionStorage como respaldo).
+ * @returns {string|null} id del lead o null si aún no se ha creado.
+ */
+function getLeadId() {
+    if (currentLeadId) return currentLeadId;
+    try { return sessionStorage.getItem('ncl_lead_id'); } catch (e) { return null; }
+}
+
+/**
+ * Guarda el id del lead recién creado en memoria y sessionStorage.
+ * @param {string} id - UUID generado en el navegador para el nuevo lead.
+ */
+function setLeadId(id) {
+    currentLeadId = id;
+    try { sessionStorage.setItem('ncl_lead_id', id); } catch (e) { /* almacenamiento no disponible */ }
+}
+
+/**
+ * Crea el lead en Supabase con los datos del Paso 1. El id lo genera el
+ * propio navegador (no se le pide a la base de datos ni se lee de vuelta),
+ * así el cliente público nunca necesita permiso de lectura sobre la tabla.
+ * Es "best effort": si falla, el usuario sigue su camino por WhatsApp/email
+ * igual, para no afectar la conversión del formulario.
+ * @param {string} id - UUID del nuevo lead.
+ * @param {Object} data - {name, typeValue, budgetValue, needs, contact}.
+ */
+async function saveLeadStep1(id, data) {
+    if (!supabaseClient) return;
+    try {
+        await supabaseClient.from('leads').insert({
+            id,
+            name: data.name,
+            project_type: data.typeValue,
+            budget: data.budgetValue,
+            needs: data.needs,
+            contact_info: data.contact,
+            locale: currentLang()
+        });
+    } catch (err) {
+        console.error('No se pudo guardar el lead en Supabase:', err);
+    }
+}
+
+/**
+ * Actualiza el lead ya existente con la información del Paso 2 (o solo con
+ * step2_status: 'skipped' si el usuario decide completarlo más tarde).
+ * Nunca crea un lead nuevo: siempre actualiza por id. También "best effort".
+ *
+ * Va vía RPC (update_lead_step2) y no vía UPDATE directo: PostgREST exige
+ * privilegio SELECT para poder ejecutar cualquier UPDATE (incluso sin pedir
+ * los datos de vuelta), y la key pública nunca debe poder leer la tabla.
+ * @param {string} id - UUID del lead a actualizar.
+ * @param {Object} patch - Columnas a actualizar (nombres = columnas de la tabla).
+ */
+async function updateLeadStep2(id, patch) {
+    if (!supabaseClient || !id) return;
+    try {
+        await supabaseClient.rpc('update_lead_step2', {
+            p_lead_id: id,
+            p_business_name: patch.business_name ?? null,
+            p_business_description: patch.business_description ?? null,
+            p_has_website: patch.has_website ?? null,
+            p_website_url: patch.website_url ?? null,
+            p_goals: patch.goals ?? null,
+            p_goals_other: patch.goals_other ?? null,
+            p_features: patch.features ?? null,
+            p_features_other: patch.features_other ?? null,
+            p_existing_content: patch.existing_content ?? null,
+            p_design_reference_url: patch.design_reference_url ?? null,
+            p_design_style: patch.design_style ?? null,
+            p_seo_location: patch.seo_location ?? null,
+            p_seo_main_service: patch.seo_main_service ?? null,
+            p_additional_info: patch.additional_info ?? null,
+            p_step2_status: patch.step2_status ?? null
+        });
+    } catch (err) {
+        console.error('No se pudo actualizar el lead en Supabase:', err);
+    }
+}
+
+/**
+ * Recolecta los valores marcados de un grupo de checkboxes por su atributo name.
+ * @param {string} name - Atributo name compartido por el grupo de checkboxes.
+ * @returns {string[]} Valores marcados (vacío si ninguno está marcado).
+ */
+function getCheckedValues(name) {
+    return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(el => el.value);
+}
+
 /**
  * Aplica un idioma a toda la página.
  * Reemplaza el texto de los elementos con data-i18n, los placeholders con
@@ -130,6 +244,64 @@ function isValidContact(value) {
 }
 
 /**
+ * Revela un panel del formulario con una transición suave de opacidad y
+ * desplazamiento vertical (quita 'hidden' y anima en el siguiente frame).
+ * @param {HTMLElement} el - Panel a mostrar.
+ */
+function revealPanel(el) {
+    if (!el) return;
+    el.classList.remove('hidden');
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(12px)';
+    requestAnimationFrame(() => {
+        el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+    });
+}
+
+/**
+ * Cambia el estado visible del formulario de 2 pasos (uno de:
+ * 'step1' | 'transition' | 'step2' | 'success'), incluyendo la barra de
+ * progreso, que solo se muestra durante los pasos 1 y 2.
+ * @param {string} state - Estado a mostrar.
+ */
+function showFormState(state) {
+    const progress = document.getElementById('formProgress');
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    const panels = {
+        step1: document.getElementById('leadForm'),
+        transition: document.getElementById('transitionScreen'),
+        step2: document.getElementById('step2Form'),
+        success: document.getElementById('formSuccess')
+    };
+    const dict = translations[currentLang()] || {};
+
+    Object.values(panels).forEach(el => { if (el) el.classList.add('hidden'); });
+    revealPanel(panels[state]);
+
+    // El panel que se muestra puede tener una altura muy distinta al anterior
+    // (el Paso 2 es largo, la transición y el éxito son cortos). Sin esto, el
+    // usuario podría quedar viendo una sección totalmente distinta de la
+    // página tras el cambio de layout.
+    const heroForm = document.getElementById('hero-form');
+    if (heroForm) heroForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    if (state === 'step1' || state === 'step2') {
+        const key = state === 'step2' ? 'progress_step2' : 'progress_step1';
+        if (progress) progress.classList.remove('hidden');
+        if (progressFill) progressFill.classList.toggle('step-2', state === 'step2');
+        if (progressLabel) {
+            progressLabel.setAttribute('data-i18n', key);
+            progressLabel.textContent = dict[key] || (state === 'step2' ? 'Paso 2 de 2' : 'Paso 1 de 2');
+        }
+    } else if (progress) {
+        progress.classList.add('hidden');
+    }
+}
+
+/**
  * Aplica un tema de color a toda la página.
  * Fija data-theme en <html>, persiste la elección, sincroniza el color de la
  * barra del navegador (meta theme-color) y actualiza el icono del botón.
@@ -218,21 +390,23 @@ document.addEventListener('DOMContentLoaded', () => {
             observer.observe(sec);
         });
 
-    // ── Envío del formulario: WhatsApp (principal) + email (alternativa) ──
+    // ── Paso 1: WhatsApp (principal) + email (alternativa) + guardado en Supabase ──
     const form = document.getElementById('leadForm');
-    const successMsg = document.getElementById('formSuccess');
 
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            // Recoger valores. En los <select> tomamos el texto visible (ya traducido).
+            // Recoger valores. En los <select> tomamos el texto visible (ya traducido)
+            // para el mensaje de WhatsApp/email, y el value crudo para la base de datos.
             const typeSelect = document.getElementById('project-type');
             const budgetSelect = document.getElementById('budget');
             const data = {
                 name: document.getElementById('name').value.trim(),
                 type: typeSelect.options[typeSelect.selectedIndex].text,
+                typeValue: typeSelect.value,
                 budget: budgetSelect.value ? budgetSelect.options[budgetSelect.selectedIndex].text : '—',
+                budgetValue: budgetSelect.value || null,
                 needs: document.getElementById('needs').value.trim(),
                 contact: document.getElementById('contact-info').value.trim()
             };
@@ -258,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 '?subject=' + encodeURIComponent(subject) +
                 '&body=' + encodeURIComponent(message);
 
-            // Conectar los botones del estado de éxito antes de mostrarlo
+            // Conectar los botones de respaldo (WhatsApp/email) del cierre final
             const waBtn = document.getElementById('successWhatsapp');
             const mailBtn = document.getElementById('successEmail');
             if (waBtn) waBtn.setAttribute('href', waUrl);
@@ -270,20 +444,91 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.textContent = sendingText;
             btn.disabled = true;
 
+            // Crear el lead ya mismo (id generado en el navegador) para no perderlo
+            // aunque el usuario abandone después. Guardado en Supabase es best-effort:
+            // nunca bloquea ni condiciona el resto del flujo de conversión.
+            const leadId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(16).slice(2));
+            setLeadId(leadId);
+            saveLeadStep1(leadId, data);
+
             // Abrir WhatsApp dentro del gesto del usuario (evita bloqueo de popups)
             window.open(waUrl, '_blank');
 
-            setTimeout(() => {
-                form.classList.add('hidden');
-                successMsg.classList.remove('hidden');
-                successMsg.style.opacity = '0';
-                successMsg.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    successMsg.style.transition = 'all 0.4s ease';
-                    successMsg.style.opacity = '1';
-                    successMsg.style.transform = 'scale(1)';
-                }, 10);
-            }, 400);
+            setTimeout(() => showFormState('transition'), 400);
+        });
+    }
+
+    // ── Transición Paso 1 → Paso 2 ──
+    const continueBtn = document.getElementById('continueToStep2');
+    if (continueBtn) {
+        continueBtn.addEventListener('click', () => showFormState('step2'));
+    }
+
+    const skipBtn = document.getElementById('skipStep2');
+    if (skipBtn) {
+        skipBtn.addEventListener('click', () => {
+            const id = getLeadId();
+            if (id) updateLeadStep2(id, { step2_status: 'skipped' });
+            showFormState('success');
+        });
+    }
+
+    // ── Paso 2: información adicional para preparar la propuesta ──
+    // Campos condicionales: URL del sitio actual y aclaración de "Otro"
+    document.querySelectorAll('input[name="has_website"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            const field = document.getElementById('websiteUrlField');
+            if (field) field.classList.toggle('show', radio.value === 'yes' && radio.checked);
+        });
+    });
+
+    const goalOtherCheckbox = document.getElementById('goalOtherCheckbox');
+    const goalOtherField = document.getElementById('goalOtherField');
+    if (goalOtherCheckbox && goalOtherField) {
+        goalOtherCheckbox.addEventListener('change', () => goalOtherField.classList.toggle('show', goalOtherCheckbox.checked));
+    }
+
+    const featureOtherCheckbox = document.getElementById('featureOtherCheckbox');
+    const featureOtherField = document.getElementById('featureOtherField');
+    if (featureOtherCheckbox && featureOtherField) {
+        featureOtherCheckbox.addEventListener('change', () => featureOtherField.classList.toggle('show', featureOtherCheckbox.checked));
+    }
+
+    const step2Form = document.getElementById('step2Form');
+    if (step2Form) {
+        step2Form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const id = getLeadId();
+            const hasWebsiteChecked = document.querySelector('input[name="has_website"]:checked');
+            const patch = {
+                business_name: document.getElementById('business-name').value.trim(),
+                business_description: document.getElementById('business-desc').value.trim(),
+                has_website: hasWebsiteChecked ? hasWebsiteChecked.value === 'yes' : null,
+                website_url: document.getElementById('website-url').value.trim() || null,
+                goals: getCheckedValues('goals'),
+                goals_other: document.getElementById('goal-other-text').value.trim() || null,
+                features: getCheckedValues('features'),
+                features_other: document.getElementById('feature-other-text').value.trim() || null,
+                existing_content: getCheckedValues('existing_content'),
+                design_reference_url: document.getElementById('design-ref').value.trim() || null,
+                design_style: document.getElementById('design-style').value.trim() || null,
+                seo_location: document.getElementById('seo-location').value.trim() || null,
+                seo_main_service: document.getElementById('seo-service').value.trim() || null,
+                additional_info: document.getElementById('additional-info').value.trim() || null,
+                step2_status: 'completed',
+                step2_completed_at: new Date().toISOString()
+            };
+
+            const dict = translations[currentLang()] || {};
+            const step2Btn = step2Form.querySelector('button[type="submit"]');
+            if (step2Btn) {
+                step2Btn.textContent = dict.form_sending || 'Enviando...';
+                step2Btn.disabled = true;
+            }
+
+            if (id) updateLeadStep2(id, patch);
+            showFormState('success');
         });
     }
 
