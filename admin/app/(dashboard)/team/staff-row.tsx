@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, type CSSProperties } from 'react'
 import { toast } from 'sonner'
 import { KeyRound, Pencil, Trash2 } from 'lucide-react'
 import {
@@ -24,7 +24,15 @@ import type { ProfileRow, StaffRole } from '@/types'
 
 const ASSIGNABLE_ROLES: StaffRole[] = ['admin', 'ventas', 'disenador', 'client']
 
-export function StaffRow({ profile, isSelf }: { profile: ProfileRow; isSelf: boolean }) {
+export function StaffRow({
+  profile,
+  isSelf,
+  style,
+}: {
+  profile: ProfileRow
+  isSelf: boolean
+  style?: CSSProperties
+}) {
   const [isPending, startTransition] = useTransition()
   const [showPasswordField, setShowPasswordField] = useState(false)
   const [newPassword, setNewPassword] = useState('')
@@ -88,7 +96,10 @@ export function StaffRow({ profile, isSelf }: { profile: ProfileRow; isSelf: boo
   }
 
   return (
-    <li className="flex flex-col gap-3 rounded-md border p-3">
+    <li
+      className="animate-fade-in-up flex flex-col gap-3 rounded-lg border bg-card p-3 transition-colors hover:border-signal/30"
+      style={style}
+    >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-medium">

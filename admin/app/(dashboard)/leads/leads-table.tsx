@@ -72,7 +72,7 @@ export function LeadsTable({ data, totalCount, page, pageSize, staff, canBulkEdi
         <BulkActionsBar leadIds={selectedIds} staff={staff} isAdmin={isAdmin} onDone={() => setRowSelection({})} />
       )}
 
-      <div className="overflow-x-auto rounded-md border">
+      <div className="animate-fade-in-up overflow-x-auto rounded-lg border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

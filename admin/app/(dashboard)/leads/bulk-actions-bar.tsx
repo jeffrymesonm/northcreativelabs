@@ -49,7 +49,7 @@ export function BulkActionsBar({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-md border bg-muted/40 p-3">
+    <div className="animate-fade-in-up flex flex-wrap items-center gap-2 rounded-lg border border-signal/30 bg-signal/5 p-3">
       <span className="text-sm font-medium">{leadIds.length} seleccionados</span>
 
       <Button

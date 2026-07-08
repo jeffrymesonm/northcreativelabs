@@ -12,8 +12,10 @@ const CARDS: { key: StatusCardKey; label: string }[] = [
 export function StatusCardsGrid({ counts }: { counts: LeadStatusCounts }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-      {CARDS.map(({ key, label }) => (
-        <StatusCard key={key} label={label} counts={counts[key]} />
+      {CARDS.map(({ key, label }, index) => (
+        <div key={key} className="animate-fade-in-up" style={{ animationDelay: `${index * 60}ms` }}>
+          <StatusCard label={label} counts={counts[key]} />
+        </div>
       ))}
     </div>
   )

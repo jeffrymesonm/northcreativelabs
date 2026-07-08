@@ -14,15 +14,15 @@ export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
 
 /** Clases de color (fondo/texto) por estado, para el badge de la tabla. */
 export const LEAD_STATUS_BADGE_CLASS: Record<LeadStatus, string> = {
-  nuevo: 'bg-blue-500/15 text-blue-600 dark:text-blue-400',
-  contactado: 'bg-violet-500/15 text-violet-600 dark:text-violet-400',
-  esperando_respuesta: 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
-  reunion: 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400',
-  cotizacion_enviada: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400',
-  negociacion: 'bg-orange-500/15 text-orange-600 dark:text-orange-400',
-  ganado: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
-  perdido: 'bg-red-500/15 text-red-600 dark:text-red-400',
-  archivado: 'bg-zinc-500/15 text-zinc-600 dark:text-zinc-400',
+  nuevo: 'bg-blue-500/15 text-blue-600 dark:text-blue-300',
+  contactado: 'bg-violet-500/15 text-violet-600 dark:text-violet-300',
+  esperando_respuesta: 'bg-amber-500/15 text-amber-600 dark:text-amber-300',
+  reunion: 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-300',
+  cotizacion_enviada: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300',
+  negociacion: 'bg-orange-500/15 text-orange-600 dark:text-orange-300',
+  ganado: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300',
+  perdido: 'bg-red-500/15 text-red-600 dark:text-red-300',
+  archivado: 'bg-zinc-500/15 text-zinc-600 dark:text-zinc-300',
 }
 
 export const LEAD_STATUS_OPTIONS: LeadStatus[] = [
@@ -45,12 +45,29 @@ export const PROJECT_TYPE_LABELS: Record<string, string> = {
   otro: 'Otro',
 }
 
+export const PROJECT_TYPE_OPTIONS = ['negocio', 'portfolio', 'landing', 'e-commerce', 'otro'] as const
+
 export const BUDGET_LABELS: Record<string, string> = {
   '100-300': '$100 – $300',
   '300-600': '$300 – $600',
   '600-1000': '$600 – $1.000',
   '1000+': '$1.000+',
 }
+
+export const BUDGET_OPTIONS = ['100-300', '300-600', '600-1000', '1000+'] as const
+
+/** Canales de origen para leads creados a mano desde el CRM (`web_form` es exclusivo del formulario público). */
+export const LEAD_SOURCE_LABELS: Record<string, string> = {
+  referido: 'Referido',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  whatsapp: 'WhatsApp',
+  llamada: 'Llamada',
+  email: 'Email',
+  otro: 'Otro',
+}
+
+export const LEAD_SOURCE_OPTIONS = ['referido', 'instagram', 'facebook', 'whatsapp', 'llamada', 'email', 'otro'] as const
 
 export const STAFF_ROLE_LABELS: Record<StaffRole, string> = {
   admin: 'Admin',
@@ -127,11 +144,11 @@ export const QUOTE_STATUS_LABELS: Record<QuoteStatus, string> = {
 }
 
 export const QUOTE_STATUS_BADGE_CLASS: Record<QuoteStatus, string> = {
-  borrador: 'bg-zinc-500/15 text-zinc-600 dark:text-zinc-400',
-  enviada: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400',
-  aceptada: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
-  rechazada: 'bg-red-500/15 text-red-600 dark:text-red-400',
-  expirada: 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
+  borrador: 'bg-zinc-500/15 text-zinc-600 dark:text-zinc-300',
+  enviada: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300',
+  aceptada: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300',
+  rechazada: 'bg-red-500/15 text-red-600 dark:text-red-300',
+  expirada: 'bg-amber-500/15 text-amber-600 dark:text-amber-300',
 }
 
 export const QUOTE_STATUS_OPTIONS: QuoteStatus[] = ['borrador', 'enviada', 'aceptada', 'rechazada', 'expirada']
