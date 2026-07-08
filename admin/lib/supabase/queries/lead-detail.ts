@@ -34,9 +34,12 @@ export async function getLeadTasks(leadId: string): Promise<LeadTaskWithAssignee
   const supabase = await createClient()
   const { data } = await supabase
     .from('lead_tasks')
-    .select('*, assignee:profiles!assigned_to(id, full_name)')
+    .select(
+      '*, assignee:profiles!assigned_to(id, full_name), comments:lead_task_comments(*, author:profiles!author_id(id, full_name))'
+    )
     .eq('lead_id', leadId)
     .order('created_at', { ascending: false })
+    .order('created_at', { referencedTable: 'lead_task_comments', ascending: true })
 
   return (data as unknown as LeadTaskWithAssignee[]) ?? []
 }
@@ -83,9 +86,10 @@ export async function getQuotes(leadId: string): Promise<QuoteWithCreator[]> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('quotes')
-    .select('*, creator:profiles!created_by(id, full_name)')
+    .select('*, creator:profiles!created_by(id, full_name), items:quote_items(*)')
     .eq('lead_id', leadId)
     .order('version', { ascending: false })
+    .order('sort_order', { referencedTable: 'quote_items', ascending: true })
 
   const quotes = (data as unknown as (QuoteWithCreator & { pdfSignedUrl?: null })[]) ?? []
 

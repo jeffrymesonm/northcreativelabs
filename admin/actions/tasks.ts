@@ -47,3 +47,49 @@ export async function toggleTaskStatus(taskId: string, leadId: string, done: boo
   revalidatePath(`/leads/${leadId}`)
   return {}
 }
+
+export async function addTaskComment(taskId: string, leadId: string, body: string) {
+  const profile = await getCurrentProfile()
+  if (!profile?.role) return { error: 'No autorizado.' }
+
+  const trimmed = body.trim()
+  if (!trimmed) return { error: 'El comentario no puede estar vacío.' }
+
+  const supabase = await createClient()
+  const { error } = await supabase.from('lead_task_comments').insert({
+    task_id: taskId,
+    author_id: profile.id,
+    body: trimmed,
+  })
+
+  if (error) return { error: 'No se pudo guardar el comentario.' }
+  revalidatePath(`/leads/${leadId}`)
+  return {}
+}
+
+export async function updateTaskComment(commentId: string, leadId: string, body: string) {
+  const profile = await getCurrentProfile()
+  if (!profile?.role) return { error: 'No autorizado.' }
+
+  const trimmed = body.trim()
+  if (!trimmed) return { error: 'El comentario no puede estar vacío.' }
+
+  const supabase = await createClient()
+  const { error } = await supabase.from('lead_task_comments').update({ body: trimmed }).eq('id', commentId)
+
+  if (error) return { error: 'No se pudo actualizar el comentario.' }
+  revalidatePath(`/leads/${leadId}`)
+  return {}
+}
+
+export async function deleteTaskComment(commentId: string, leadId: string) {
+  const profile = await getCurrentProfile()
+  if (!profile?.role) return { error: 'No autorizado.' }
+
+  const supabase = await createClient()
+  const { error } = await supabase.from('lead_task_comments').delete().eq('id', commentId)
+
+  if (error) return { error: 'No se pudo borrar el comentario.' }
+  revalidatePath(`/leads/${leadId}`)
+  return {}
+}

@@ -30,6 +30,22 @@ export function QuoteItem({ quote, canEdit }: { quote: QuoteWithCreator; canEdit
         <p className="text-xs text-muted-foreground">
           {quote.creator?.full_name ?? 'Usuario'} · {dateFormatter.format(new Date(quote.created_at))}
         </p>
+        {quote.items.length > 0 && (
+          <ul className="rounded-md border text-xs">
+            {quote.items.map((item) => (
+              <li key={item.id} className="flex justify-between gap-4 border-b p-2 last:border-b-0">
+                <span>
+                  {item.description} <span className="text-muted-foreground">×{item.quantity}</span>
+                </span>
+                <span className="shrink-0">
+                  {new Intl.NumberFormat('en-US', { style: 'currency', currency: quote.currency || 'USD' }).format(
+                    item.quantity * item.unit_price
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
         {quote.notes && <p className="text-sm whitespace-pre-wrap">{quote.notes}</p>}
         {quote.pdfSignedUrl && (
           <a

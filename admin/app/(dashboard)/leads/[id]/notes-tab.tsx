@@ -1,9 +1,18 @@
 import { NoteForm } from './note-form'
+import { NoteItem } from './note-item'
 import type { LeadNoteWithAuthor } from '@/types'
 
-export function NotesTab({ leadId, notes }: { leadId: string; notes: LeadNoteWithAuthor[] }) {
-  const dateFormatter = new Intl.DateTimeFormat('es-DO', { dateStyle: 'medium', timeStyle: 'short' })
-
+export function NotesTab({
+  leadId,
+  notes,
+  currentUserId,
+  isAdmin,
+}: {
+  leadId: string
+  notes: LeadNoteWithAuthor[]
+  currentUserId?: string
+  isAdmin: boolean
+}) {
   return (
     <div className="space-y-6">
       <NoteForm leadId={leadId} />
@@ -11,12 +20,7 @@ export function NotesTab({ leadId, notes }: { leadId: string; notes: LeadNoteWit
       {notes.length ? (
         <ul className="space-y-3">
           {notes.map((note) => (
-            <li key={note.id} className="rounded-md border p-3">
-              <p className="text-sm whitespace-pre-wrap">{note.body}</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {note.author?.full_name ?? 'Usuario'} · {dateFormatter.format(new Date(note.created_at))}
-              </p>
-            </li>
+            <NoteItem key={note.id} note={note} canEdit={isAdmin || note.author_id === currentUserId} />
           ))}
         </ul>
       ) : (

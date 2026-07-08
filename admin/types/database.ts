@@ -107,6 +107,15 @@ type LeadTasksRow = {
   updated_at: string
 }
 
+type LeadTaskCommentsRow = {
+  id: string
+  task_id: string
+  author_id: string | null
+  body: string
+  created_at: string
+  updated_at: string
+}
+
 type LeadActivityRow = {
   id: string
   lead_id: string
@@ -142,6 +151,16 @@ type QuotesRow = {
   updated_at: string
 }
 
+type QuoteItemsRow = {
+  id: string
+  quote_id: string
+  description: string
+  quantity: number
+  unit_price: number
+  sort_order: number
+  created_at: string
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -174,6 +193,12 @@ export interface Database {
         Update: Partial<LeadTasksRow>
         Relationships: []
       }
+      lead_task_comments: {
+        Row: LeadTaskCommentsRow
+        Insert: Partial<LeadTaskCommentsRow> & { task_id: string; body: string }
+        Update: Partial<LeadTaskCommentsRow>
+        Relationships: []
+      }
       lead_activity: {
         Row: LeadActivityRow
         Insert: Partial<LeadActivityRow> & { lead_id: string; type: ActivityType; description: string }
@@ -192,6 +217,12 @@ export interface Database {
         Update: Partial<QuotesRow>
         Relationships: []
       }
+      quote_items: {
+        Row: QuoteItemsRow
+        Insert: Partial<QuoteItemsRow> & { quote_id: string; description: string; unit_price: number }
+        Update: Partial<QuoteItemsRow>
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -201,6 +232,15 @@ export interface Database {
       lead_status: LeadStatus
     }
     Functions: {
+      create_quote_with_items: {
+        Args: {
+          p_lead_id: string
+          p_currency: string | null
+          p_notes: string | null
+          p_items: { description: string; quantity: number; unit_price: number }[]
+        }
+        Returns: string
+      }
       update_lead_step2: {
         Args: {
           p_lead_id: string

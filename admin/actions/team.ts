@@ -59,6 +59,67 @@ export async function createStaffUser(input: {
   return {}
 }
 
+export async function updateStaffProfile(profileId: string, input: { fullName: string; username: string }) {
+  const admin = await requireAdmin()
+  if (!admin) return { error: 'Solo un administrador puede editar usuarios.' }
+
+  const fullName = input.fullName.trim()
+  if (!fullName) return { error: 'El nombre es obligatorio.' }
+
+  const username = input.username.trim().toLowerCase()
+  if (!isValidUsername(username)) {
+    return { error: 'El usuario debe tener 3-32 caracteres: minúsculas, números, puntos, guiones.' }
+  }
+
+  const supabaseAdmin = createAdminClient()
+  const email = usernameToInternalEmail(username)
+
+  const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(profileId, {
+    email,
+    user_metadata: { full_name: fullName, username },
+  })
+  if (authError) {
+    if (authError.message?.toLowerCase().includes('already')) {
+      return { error: 'Ese nombre de usuario ya existe.' }
+    }
+    return { error: 'No se pudo actualizar el usuario.' }
+  }
+
+  const { error: profileError } = await supabaseAdmin
+    .from('profiles')
+    .update({ full_name: fullName, username, email })
+    .eq('id', profileId)
+
+  if (profileError) {
+    if (profileError.code === '23505') return { error: 'Ese nombre de usuario ya existe.' }
+    return { error: 'Usuario actualizado, pero no se pudo sincronizar el perfil.' }
+  }
+
+  revalidatePath('/team')
+  return {}
+}
+
+export async function deleteStaffUser(profileId: string) {
+  const admin = await requireAdmin()
+  if (!admin) return { error: 'Solo un administrador puede eliminar usuarios.' }
+  if (profileId === admin.id) return { error: 'No puedes eliminar tu propia cuenta.' }
+
+  const supabase = await createClient()
+  const { data: target } = await supabase.from('profiles').select('role').eq('id', profileId).single()
+
+  if (target?.role === 'admin') {
+    const { count } = await supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'admin')
+    if ((count ?? 0) <= 1) return { error: 'No puedes eliminar al único administrador restante.' }
+  }
+
+  const supabaseAdmin = createAdminClient()
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(profileId)
+  if (error) return { error: 'No se pudo eliminar el usuario.' }
+
+  revalidatePath('/team')
+  return {}
+}
+
 export async function updateStaffRole(profileId: string, role: StaffRole) {
   const admin = await requireAdmin()
   if (!admin) return { error: 'No tienes permiso para cambiar roles.' }

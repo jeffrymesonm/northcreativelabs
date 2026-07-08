@@ -137,6 +137,16 @@ function getCheckedValues(name) {
 }
 
 /**
+ * Antepone "https://" cuando el cliente escribe una URL sin esquema
+ * (ej. "midominio.com"), ya que no todos saben que hace falta.
+ */
+function normalizeUrl(value) {
+    const trimmed = (value || '').trim();
+    if (!trimmed) return null;
+    return /^https?:\/\//i.test(trimmed) ? trimmed : 'https://' + trimmed;
+}
+
+/**
  * Aplica un idioma a toda la página.
  * Reemplaza el texto de los elementos con data-i18n, los placeholders con
  * data-i18n-ph y el título del documento. Persiste la elección en localStorage.
@@ -505,13 +515,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 business_name: document.getElementById('business-name').value.trim(),
                 business_description: document.getElementById('business-desc').value.trim(),
                 has_website: hasWebsiteChecked ? hasWebsiteChecked.value === 'yes' : null,
-                website_url: document.getElementById('website-url').value.trim() || null,
+                website_url: normalizeUrl(document.getElementById('website-url').value),
                 goals: getCheckedValues('goals'),
                 goals_other: document.getElementById('goal-other-text').value.trim() || null,
                 features: getCheckedValues('features'),
                 features_other: document.getElementById('feature-other-text').value.trim() || null,
                 existing_content: getCheckedValues('existing_content'),
-                design_reference_url: document.getElementById('design-ref').value.trim() || null,
+                design_reference_url: normalizeUrl(document.getElementById('design-ref').value),
                 design_style: document.getElementById('design-style').value.trim() || null,
                 seo_location: document.getElementById('seo-location').value.trim() || null,
                 seo_main_service: document.getElementById('seo-service').value.trim() || null,

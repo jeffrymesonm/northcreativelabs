@@ -1,12 +1,6 @@
 import Link from 'next/link'
-import { LayoutDashboard, Users, UserCog } from 'lucide-react'
+import { NAV_ITEMS } from '@/lib/constants/nav'
 import type { StaffRole } from '@/types'
-
-const NAV_ITEMS: { href: string; label: string; icon: typeof LayoutDashboard; roles: StaffRole[] }[] = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'ventas', 'disenador'] },
-  { href: '/leads', label: 'Leads', icon: Users, roles: ['admin', 'ventas', 'disenador'] },
-  { href: '/team', label: 'Equipo', icon: UserCog, roles: ['admin'] },
-]
 
 export function Sidebar({ role }: { role: StaffRole }) {
   const items = NAV_ITEMS.filter((item) => item.roles.includes(role))

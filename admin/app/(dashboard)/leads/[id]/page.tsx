@@ -58,10 +58,16 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
           <TimelineTab activity={activity} />
         </TabsContent>
         <TabsContent value="notas" className="mt-4">
-          <NotesTab leadId={lead.id} notes={notes} />
+          <NotesTab leadId={lead.id} notes={notes} currentUserId={currentProfile?.id} isAdmin={isAdmin} />
         </TabsContent>
         <TabsContent value="tareas" className="mt-4">
-          <TasksTab leadId={lead.id} tasks={tasks} staff={staff} />
+          <TasksTab
+            leadId={lead.id}
+            tasks={tasks}
+            staff={staff}
+            currentUserId={currentProfile?.id}
+            isAdmin={isAdmin}
+          />
         </TabsContent>
         <TabsContent value="archivos" className="mt-4">
           <FilesTab leadId={lead.id} files={files} currentUserId={currentProfile?.id} isAdmin={isAdmin} />

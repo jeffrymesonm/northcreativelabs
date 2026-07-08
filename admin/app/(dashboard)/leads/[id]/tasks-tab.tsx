@@ -6,10 +6,14 @@ export function TasksTab({
   leadId,
   tasks,
   staff,
+  currentUserId,
+  isAdmin,
 }: {
   leadId: string
   tasks: LeadTaskWithAssignee[]
   staff: ProfileRow[]
+  currentUserId?: string
+  isAdmin: boolean
 }) {
   return (
     <div className="space-y-6">
@@ -18,7 +22,7 @@ export function TasksTab({
       {tasks.length ? (
         <ul className="space-y-2">
           {tasks.map((task) => (
-            <TaskItem key={task.id} task={task} />
+            <TaskItem key={task.id} task={task} currentUserId={currentUserId} isAdmin={isAdmin} />
           ))}
         </ul>
       ) : (
